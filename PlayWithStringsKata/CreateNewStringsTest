@@ -1,0 +1,12 @@
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+
+public class PlayWithStringsTest {
+    @Test
+    public void Sample_tests() {
+        assertEquals("abCCde", PlayWithStrings.workOnStrings("abc","cde"));
+        assertEquals("abcDeFGtrzWDEFGgGFhjkWqE", PlayWithStrings.workOnStrings("abcdeFgtrzw", "defgGgfhjkwqe"));
+        assertEquals("abcDEfgDEFGg", PlayWithStrings.workOnStrings("abcdeFg", "defgG"));
+        assertEquals("ABABbababa", PlayWithStrings.workOnStrings("abab", "bababa"));
+    }
+}
