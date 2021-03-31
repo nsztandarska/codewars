@@ -1,0 +1,91 @@
+/*
+Write a function that accepts fight string consists of only small letters and * which means a bomb drop place.
+Return who wins the fight after bombs are exploded.
+When the left side wins return Left side wins!,
+when the right side wins return Right side wins!,
+in other case return Let's fight again!.
+
+ The left side letters and their power:
+ w - 4
+ p - 3
+ b - 2
+ s - 1
+
+ The right side letters and their power
+ m - 4
+ q - 3
+ d - 2
+ z - 1
+
+The other letters don't have power and are only victims.
+The * bombs kills the adjacent letters ( i.e. aa*aa => a___a, **aa** => ______ );
+https://www.codewars.com/kata/5938f5b606c3033f4700015a/train/java
+ */
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class AlphabetWarAirstrike{
+
+    /*
+    \\*+ - * is normally a special character. We have to escape it with \\ to make it a normal *.
+    The + is a 1-or-many match. What does this mean?
+    It means that the expression \\*+ will match at least one * character, perhaps many of them in a row.
+    .? this is a non-greedy 0-or-1 match of any character. This requires some explaining.
+    This will match at most 1 character, but, if the overall pattern will fail to match something,
+    then the pattern can be tried again but matching nothing. What it means,
+    is: "if possible, match 1 character - any character (including *)"
+     */
+
+    public static String removeBombsAndAdjacentChars(String fight) {
+
+        String result = "";
+
+        if(fight.length() > 0) {
+            result = fight.replaceAll(".?\\*+.?", "");
+
+        }
+        return result;
+    }
+
+    public static String alphabetWar(String fight) {
+
+        String result = removeBombsAndAdjacentChars(fight);
+        //parallel arrays
+        char[] leftSideLetters = {'w', 'p', 'b', 's'};
+        char[] rightSideLetters = {'m', 'q', 'd', 'z'};
+        int[] power = {4, 3, 2, 1};
+        String returningMessage = "";
+        if (result.length() == 0) {
+            returningMessage = "Let's fight again!";
+        } else {
+            int leftScore = 0;
+            int rightScore = 0;
+
+            for (int i = 0; i < result.length(); i++) {
+                char currentChar = result.charAt(i);
+                for (int j = 0; j < leftSideLetters.length; j++) {
+                    if (currentChar == leftSideLetters[j]) {
+                        leftScore += power[j];
+                    }
+                }
+                for (int k = 0; k < rightSideLetters.length; k++) {
+                    if (currentChar == rightSideLetters[k]) {
+                        rightScore += power[k];
+                    }
+                }
+
+                if (leftScore > rightScore) {
+                    returningMessage = "Left side wins!";
+                } else if (rightScore > leftScore) {
+                    returningMessage = "Right side wins!";
+                } else {
+                    returningMessage = "Let's fight again!";
+                }
+            }
+
+        }
+
+        return returningMessage;
+    }
+}
