@@ -1,0 +1,40 @@
+public class MexicanWave {
+
+    public static String[] wave(String str) {
+
+        int lenWithoutSpaces = str.length() - countSpaces(str);
+        String[] result = new String[lenWithoutSpaces];
+        int index = 0;
+
+        for (int i = 0; i < str.length(); i++) {
+
+            while (Character.toString(str.charAt(i)).equals(" ")) {
+
+                if ((i+1)>=str.length()) {
+                    return result;
+                }
+                i++;
+            }
+
+            StringBuilder sb = new StringBuilder(str);
+            sb.setCharAt(i, Character.toUpperCase(str.charAt(i)));
+            result[index] = sb.toString();
+            index++;
+        }
+
+        return result;
+
+    }
+
+    private static int countSpaces(String str) {
+
+        int count = 0;
+
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == ' ') {
+                count++;
+            }
+        }
+        return count;
+    }
+}
