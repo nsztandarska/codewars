@@ -1,0 +1,90 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+
+
+public class MaxSumDigits {
+
+    /**
+     * We want to find the numbers higher or equal than 1000 that the sum of every consecutives digits cannot be higher
+     * than a certain given value.
+     * @param nmax - as the max value of the interval to study - the range: (1000, nmax)
+     * @param maxsm - the maximum sum that every four consecutive digits should be less or equal
+     * @return list with data [(1), (2), (3)]
+     * (1) - the amount of numbers thata satisfy the constraint presented above;
+     * (2) - the closest number to the mean of the results, if there are more than one, the smallest number should be chosen;
+     * (3) = the total sum of all found numbers;
+     */
+
+    public static long[] maxSumDig (long nmax, int maxsm) {
+
+        ArrayList<Long> digits = new ArrayList<>();
+        long[] result = new long[3];
+
+        for (int i = 1000; i <= nmax; i++) {
+
+            int currentDigit = i;
+            String digToStr = String.valueOf(currentDigit);
+            char[] digToCharArr = digToStr.toCharArray();
+            for (int k = 0; k < digToCharArr.length - 3; k++) {
+                char[] subarr = Arrays.copyOfRange(digToCharArr, k, k+4); //[1, 0, 0, 0]
+                int sum = 0;
+                for (int j = 0; j < subarr.length; j++) {
+
+                    long currentLong = Long.valueOf(String.valueOf(subarr[j]));
+                    sum += currentLong;
+                }
+                if (sum <= maxsm) {
+                    String s = String.valueOf(subarr);
+                    Long l = Long.valueOf(s);
+                    digits.add(l);
+                }
+            }
+        }
+
+        result[0] = digits.size();
+        result[1] = getTheClosestToTheMeanOfResults(digits);
+        result[2] = getSum(digits);
+
+        return result;
+    }
+
+    /**
+     * method return sum of long given in ArrayList
+     * @param digits ArrayList of long
+     * @return long sum
+     */
+
+    private static long getSum(ArrayList<Long> digits) {
+        long sum = digits.stream()
+                .mapToLong(Long::longValue)
+                .sum();
+
+        return sum;
+    }
+
+    /**
+     * method return the closest number to the mean of the result
+     * @param digits ArrayList of long
+     * @return long - which is the closest to mean of digits given in ArrayList
+     */
+    private static long getTheClosestToTheMeanOfResults(ArrayList<Long> digits) {
+
+        float x = getSum(digits) / digits.size();
+        long low = 0;
+        long high = digits.size();
+
+        while (low < high) {
+            long mid = (low + high) / 2;
+            if (mid < high) {
+                int d1 = (int) Math.abs(digits.get((int) mid) - x);
+                int d2 = (int) Math.abs(digits.get(((int) mid + 1)) - x);
+                if (d2 <= d1) {
+                    low = mid + 1;
+                } else {
+                    high = mid;
+                }
+            }
+        }
+        return digits.get((int)high);
+    }
+}
