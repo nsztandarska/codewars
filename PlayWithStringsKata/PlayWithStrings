@@ -1,0 +1,74 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class PlayWithStrings {
+
+    public static String workOnStrings(String a, String b) {
+
+        Map<Character, Integer> aMap = compareStringsAndGetTheSameCharsWithTheirOccurrence(a,b);
+        System.out.println(aMap == null);
+        Map<Character, Integer> bMap = compareStringsAndGetTheSameCharsWithTheirOccurrence(b,a);
+        System.out.println(aMap == null);
+
+        String aChanged = changeCase(a, aMap);
+        String bChanged = changeCase(b, bMap);
+        String solution = aChanged + bChanged;
+
+        return solution;
+    }
+
+    private static char swapCase(char ch) {
+        return Character.isUpperCase(ch) ? Character.toLowerCase(ch) : Character.toUpperCase(ch);
+    }
+
+    public static Map<Character, Integer> compareStringsAndGetTheSameCharsWithTheirOccurrence(String stringOne, String stringTwo) {
+
+        Map<Character, Integer> comparisonResult = new HashMap<>();
+        int counter;
+
+        String sOneLower = stringOne.toLowerCase();
+        String sTwoLower = stringTwo.toLowerCase();
+
+        for (int i = 0; i < sOneLower.length(); i++) {
+            counter = 0;
+            Character currentChar = sOneLower.charAt(i);
+            for (int j = 0; j < sTwoLower.length(); j++) {
+                Character currentCharSecondString = sTwoLower.charAt(j);
+                if (currentChar == currentCharSecondString) {
+                    counter++;
+                }
+            }
+            if (comparisonResult.containsKey(currentChar)) {
+                comparisonResult.put(currentChar, comparisonResult.get(currentChar) + counter);
+            } else {
+                comparisonResult.put(currentChar, 1);
+            }
+            comparisonResult.put(currentChar, counter);
+        }
+
+        for (Map.Entry<Character, Integer> entry : comparisonResult.entrySet()) {
+            System.out.println(entry.getKey() + " " + entry.getValue());
+        }
+
+        return comparisonResult;
+    }
+
+
+    public static String changeCase(String s, Map<Character, Integer> comparisonResult) {
+
+        StringBuilder sb = new StringBuilder();
+
+        for(int i = 0; i < s.length(); i++) {
+            Character current = s.charAt(i); //d //e
+            Character currentLower = Character.toLowerCase(current); //d //e
+
+            if ((comparisonResult.containsKey(currentLower) && comparisonResult.get(currentLower) % 2 != 0)) {
+                sb.append(swapCase(current)); //D //E
+
+            } else {
+                sb.append(current);
+            }
+        }
+        return sb.toString();
+    }
+}
