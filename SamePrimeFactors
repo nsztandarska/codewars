@@ -1,0 +1,147 @@
+/*
+The number 1089 is the smallest one, non palindromic, that has the same prime factors that its reversal. Thus,
+
+prime factorization of 1089 with 3, 3, 11, 11 -------> 3, 11
+
+prime factorization of 9801 with  3, 3, 3, 3, 11, 11 -------> 3, 11
+The task for this kata is to create a function same_factRev(), that receives a nMax, to find all the numbers with the above property, bellow nMax.
+
+the function same_factRev(), will output a sorted list with the found numbers bellow nMax
+
+Let'se some cases
+
+same_factRev(1100) -----> [1089]
+
+same_factRev(2500) -----> [1089, 2178]
+(Palindromic numbers are like: 171, 454, 4224, these ones should be discarded)
+
+*/
+
+import java.util.*;
+
+public class SamePrimeFactors {
+
+    public static Integer[] sameFactRev(int nMax) {
+
+        Vector result = new Vector();
+        Integer[] arr;
+
+        if (nMax < 1089) {
+            arr = new Integer[]{};
+        }
+
+        Set<Integer> nMaxPrimeFactors;
+        Set<Integer> reversalPrimeFactors;
+
+
+        for (int i = 1089; i < nMax; i++) {
+
+            if (endsWithZero(i) || isPalindrome(i)) {
+                continue;
+            }
+            nMaxPrimeFactors = checkPrimeFactors(i); // 1089 <- {3, 11}
+            reversalPrimeFactors = checkPrimeFactors(createReversalDigit(i)); // 9801 <- {3, 11}
+
+            if (equals(nMaxPrimeFactors, reversalPrimeFactors)) {
+                result.addElement(i);
+            }
+
+        }
+        Object[] objArr = result.toArray();
+        arr = Arrays.copyOf(objArr, objArr.length, Integer[].class);
+        return arr;
+    }
+
+    /**
+     * return a Set of all prime factors for a given integer
+     * @param i positive integer
+     * @return Set of Integer - all prime number for a given param
+     */
+
+    private static Set<Integer> checkPrimeFactors(int i) {
+
+        Set<Integer> primeFactorsnMax = new HashSet<>();
+
+        while (i % 2 == 0) {
+            primeFactorsnMax.add(2);
+            i /= 2;
+        }
+
+        for (int j = 3; j <= Math.sqrt(i); j += 2) {
+            while (i % j == 0) {
+                primeFactorsnMax.add(j);
+                i /= j;
+            }
+        }
+
+        if (i > 2) {
+            primeFactorsnMax.add(i);
+        }
+        return primeFactorsnMax;
+    }
+
+
+    /**
+     * check that given number is or is not a palindrome
+     * @param nMax - integer number
+     * @return boolean value - true if number is palindrome, false otherwise
+     */
+    private static boolean isPalindrome(int nMax) {
+
+        boolean palindrome;
+        int reversed = createReversalDigit(nMax);
+
+        if (nMax == reversed) {
+            palindrome = true;
+        } else {
+            palindrome = false;
+        }
+        return palindrome;
+    }
+
+
+    /**
+     * helper method useful when we want to create reversal digit
+     * @param nMax - integer
+     * @return integer value which is reversal to param
+     */
+    private static int createReversalDigit(int nMax) {
+
+        String nMaxToString = String.valueOf(nMax);
+        int len = nMaxToString.length();
+        String reversed = "";
+        for (int i = len - 1; i >= 0; i--) {
+            reversed = reversed + nMaxToString.charAt(i);
+        }
+        return Integer.parseInt(reversed);
+    }
+
+
+    /**
+     * helper method - check that appendix of given digit is equal zero. If it is impossible to create
+     * relevant reversal value e.g int to reverse 1290 - reversal 0921 is incorrect as input
+     * @param i
+     * @return boolean value true if input digit appendix is equal 0, and false otherwise
+     */
+     
+    private static boolean endsWithZero(int i) {
+        boolean zeroSuffix;
+        if (i % 10 != 0) {
+            zeroSuffix = false;
+        } else {
+            zeroSuffix = true;
+        }
+        return zeroSuffix;
+    }
+
+    public static boolean equals(Set<?> set1, Set<?> set2){
+
+        if(set1 == null || set2 ==null){
+            return false;
+        }
+        if(set1.size()!=set2.size()){
+            return false;
+        }
+        return set1.containsAll(set2);
+    }
+}
