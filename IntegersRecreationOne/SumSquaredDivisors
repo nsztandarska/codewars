@@ -1,0 +1,47 @@
+import java.util.Vector;
+
+/*The Vector class implements a growable array of objects. Like an array, it contains components
+that can be accessed using an integer index. However, the size of a Vector can grow or shrink as
+needed to accommodate adding and removing items after the Vector has been created.
+ */
+
+public class SumSquaredDivisors {
+
+    public static String listSquared(long m, long n) {
+
+        Vector result = new Vector();
+        long baseSumDividers;
+        boolean isPerfectSquare;
+
+        while (m <= n) {
+            baseSumDividers = sumDividers(m);
+            isPerfectSquare = isSquare(baseSumDividers);
+
+            if (isPerfectSquare) {
+                Vector innerV = new Vector();
+                innerV.addElement(m);
+                innerV.addElement(baseSumDividers);
+                result.addElement(innerV);
+            }
+            m++;
+        }
+        return result.toString();
+    }
+
+    private static long sumDividers(long digit) {
+
+        long sumSquared = 0;
+        for (int i = 1; i <= digit; i++) {
+            if (digit % i == 0) {
+                sumSquared += i * i;
+            }
+        }
+        return sumSquared;
+    }
+
+    private static boolean isSquare(long digit) {
+
+        double sq = Math.sqrt(digit);
+        return ((sq - Math.floor(sq) == 0));
+    }
+}
