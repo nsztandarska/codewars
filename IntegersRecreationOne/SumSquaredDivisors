@@ -11,7 +11,6 @@ first the number the squared divisors of which is a square and then the sum of t
 Example:
 list_squared(1, 250) --> [[1, 1], [42, 2500], [246, 84100]]
 list_squared(42, 250) --> [[42, 2500], [246, 84100]]
-
 */
 
 import java.util.Vector;
