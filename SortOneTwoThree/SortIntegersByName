@@ -1,0 +1,163 @@
+/*
+INPUT :
+RANGE 0-999
+THERE MAY BE DUPLICATES
+THE ARRAY MAY BE EMPTY
+
+EXAMPLE:
+INPUT: 1, 2, 3, 4
+Equivalent names: "one", "two", "three", "four"
+Sorted by name: "four", "one", "three", "two"
+Output: 4, 1, 3, 2
+
+NOTES:
+Don't pack words together:
+e.g. 99 may be "ninety nine" or "ninety-nine"; but not "ninetynine"
+e.g 101 may be "one hundred one" or "one hundred and one"; but not "onehundredone"
+Don't fret about formatting rules, because if rules are consistently applied it has no effect anyway:
+e.g. "one hundred one", "one hundred two"; is same order as "one hundred and one", "one hundred and two"
+e.g. "ninety eight", "ninety nine"; is same order as "ninety-eight", "ninety-nine"
+ */
+ 
+ import java.util.HashMap;
+import java.util.Map;
+
+public class SortIntegersByName {
+
+    private static Map<Integer, String> integersName = new HashMap<Integer, String>();
+    static {
+        integersName.put(0, "zero");
+        integersName.put(1, "one");
+        integersName.put(2, "two");
+        integersName.put(3, "three");
+        integersName.put(4, "four");
+        integersName.put(5, "five");
+        integersName.put(6, "six");
+        integersName.put(7, "seven");
+        integersName.put(8, "eight");
+        integersName.put(9, "nine");
+        integersName.put(10, "ten");
+        integersName.put(11, "eleven");
+        integersName.put(12, "twelve");
+        integersName.put(13, "thirteen");
+        integersName.put(14, "fourteen");
+        integersName.put(15, "fifteen");
+        integersName.put(16, "sixteen");
+        integersName.put(17, "seventeen");
+        integersName.put(18, "eighteen");
+        integersName.put(19, "nineteen");
+        integersName.put(20, "twenty");
+        integersName.put(30, "thirty");
+        integersName.put(40, "forty");
+        integersName.put(50, "fifty");
+        integersName.put(60, "sixty");
+        integersName.put(70, "seventy");
+        integersName.put(80, "eighty");
+        integersName.put(90, "ninety");
+    }
+
+    /**
+     * Methods sort array of integers by their name equivalents and then return sorted integers.
+     * @param array - array of integers
+     * @return int[] sorted by name
+     */
+
+    public static int[] sort(final int array[]) { // [9, 99, 234] => nine ....
+        //input [9, 99, 234]
+        //output [nine, ninety nine, two hundred thirty four]  => sort
+
+        if (array.length == 0) {
+            return new int[0];
+        }
+        String[] arrayOfNumbersNames = new String[array.length];
+
+        for (int i = 0; i < array.length; i++) {
+            arrayOfNumbersNames[i] = execute(array[i]);
+        }
+
+        for (int i = 0; i < arrayOfNumbersNames.length; i++)
+        {
+            for (int j = i + 1; j < arrayOfNumbersNames.length; j++)
+            {
+                if (arrayOfNumbersNames[i].compareTo(arrayOfNumbersNames[j]) > 0)
+                {
+                    String temp = arrayOfNumbersNames[i];
+                    arrayOfNumbersNames[i] = arrayOfNumbersNames[j];
+                    arrayOfNumbersNames[j] = temp;
+
+                    Integer tempDig = array[i];
+                    array[i] = array[j];
+                    array[j] = tempDig;
+                }
+            }
+        }
+        return array;
+    }
+
+    /**
+     * helper method - convert given one digit number to string equivalent -> 1 => "one"
+     * @param number - int - one digit number to convert
+     * @return String - name of given digit
+     */
+
+    private static String getOneDigitNumber(int number) {
+        return integersName.get(number);
+    }
+
+    /**
+     * helper method - convert given two digit number to string equivalent -> 12 => "twelve"
+     * @param number - int - two digit number to convert
+     * @return String - name of given digit
+     */
+
+    private static String getTwoDigitNumber(int number) {
+        String nameOfNumber = "";
+        if (number < 20 || number % 10 == 0) {
+            nameOfNumber = integersName.get(number);
+        } else {
+            nameOfNumber = integersName.get((number/10) * 10);
+            nameOfNumber += " " + integersName.get(number%10);
+        }
+        return nameOfNumber;
+    }
+
+    /**
+     * helper method - convert given three digit number to string equivalent -> 921 => "nine hundred twenty one"
+     * @param number - int - three digit number to convert
+     * @return String - name of given digit
+     */
+    private static String getThreeDigitNumber(int number) {
+        String nameOfNumber = "";
+        if (number % 10 == 0 && number % 100 == 0) {
+            nameOfNumber = integersName.get(number/100) + " hundred";
+        } else if ((number % 100  < 20 || number % 10 == 0) || (number % 100 >= 20 && number % 10 != 0)){
+            nameOfNumber = getOneDigitNumber(number/100) + " hundred " + getTwoDigitNumber(number%100);
+        }
+        return nameOfNumber;
+    }
+
+    /**
+     * helper method - call the proper method depending on the number of digits in a given number
+     * -> if argument is e.g. 3 digit number then call getThreeDigitNumber(numberToName)...
+     * @param numberToName - int - one digit number to convert
+     * @return String - name of given digit
+     */
+    private static String execute(int numberToName) {
+
+        int len = String.valueOf(numberToName).length();
+        String nameOfNumber = "";
+
+        switch (len) {
+            case 1:
+                nameOfNumber = getOneDigitNumber(numberToName);
+                break;
+            case 2:
+                nameOfNumber = getTwoDigitNumber(numberToName);
+                break;
+            case 3:
+                nameOfNumber = getThreeDigitNumber(numberToName);
+                break;
+        }
+        return nameOfNumber;
+    }
+}
